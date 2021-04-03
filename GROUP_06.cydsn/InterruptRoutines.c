@@ -15,13 +15,10 @@
 #include "RGBLedDriver.h"
 
 
-
-
 extern volatile uint8_t flag_UART;
 extern volatile uint8_t value;
 
-
-            
+       
 CY_ISR(Custom_UART_RX_ISR)
 {
   

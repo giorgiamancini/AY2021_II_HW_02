@@ -12,7 +12,7 @@
 #include "RGBLedDriver.h"
 #include "colors.h"
 
-#define START 0
+#define IDLE 0
 #define HEAD 1
 #define RED 2
 #define GREEN 3
@@ -44,7 +44,8 @@ int main(void)
     for(;;)
      {   
         switch(status){
-            case START:
+            case IDLE:
+            
                 if (flag_UART == 1){
                     //sprintf(message, "Write the HEAD value\r\n");
                     //UART_PutString(message);
@@ -54,6 +55,7 @@ int main(void)
                 break;
             
             case HEAD:
+                
                 if (value == HEAD_VALUE){
                     //sprintf(message, "The HEAD value is: %d\r\n", value);
                     //UART_PutString(message);
@@ -64,7 +66,7 @@ int main(void)
                     sprintf(message, "RGB LED Program $$$\n");
                     UART_PutString(message);
                     flag_UART = 0;
-                    status = START;
+                    status = IDLE;
                 }
                 break;
                 
@@ -104,7 +106,7 @@ int main(void)
                     //UART_PutString(message);        
                     RGBLed_WriteColor(color);
                     flag_UART = 0;
-                    status = START;
+                    status = IDLE;
                 }
                 break;   
             

@@ -18,6 +18,7 @@
     
     CY_ISR_PROTO(Custom_UART_RX_ISR);
     
+    
 #endif
 
 
