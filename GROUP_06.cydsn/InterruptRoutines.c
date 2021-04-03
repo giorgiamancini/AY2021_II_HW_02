@@ -18,7 +18,7 @@
 
 
 extern volatile uint8_t flag_UART;
-extern uint8_t value;
+extern volatile uint8_t value;
 
 
             
@@ -30,7 +30,6 @@ CY_ISR(Custom_UART_RX_ISR)
         value = UART_ReadRxData();
         flag_UART = 1;
         
-    
     }
 }
 

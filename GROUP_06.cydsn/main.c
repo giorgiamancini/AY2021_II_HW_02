@@ -1,12 +1,6 @@
 /* ========================================
- *
- * Copyright YOUR COMPANY, THE YEAR
- * All Rights Reserved
- * UNPUBLISHED, LICENSED SOFTWARE.
- *
- * CONFIDENTIAL AND PROPRIETARY INFORMATION
- * WHICH IS THE PROPERTY OF your company.
- *
+ File main.c with cases
+ Group_06
  * ========================================
 */
 
@@ -24,17 +18,15 @@
 #define GREEN 3
 #define BLUE 4
 #define TAIL 5
+#define LED_ON 7
 
 #define HEAD_VALUE 160
 #define TAIL_VALUE 192
             
 volatile uint8_t flag_UART = 0;
-uint8_t value;
-
+volatile uint8_t value;
 uint8_t status = 0;
-uint8_t red;
-uint8_t green;
-uint8_t blu;
+Color color;
 
 static char message [20] = {'\0'};
 
@@ -54,8 +46,8 @@ int main(void)
         switch(status){
             case START:
                 if (flag_UART == 1){
-                    sprintf(message, "Write the HEAD value\r\n");
-                    UART_PutString(message);
+                    //sprintf(message, "Write the HEAD value\r\n");
+                    //UART_PutString(message);
                     flag_UART = 0;
                     status = HEAD;
                 }
@@ -63,13 +55,13 @@ int main(void)
             
             case HEAD:
                 if (value == HEAD_VALUE){
-                    sprintf(message, "The HEAD value is: %d\r\nWrite the RED value\r\n", value);
-                    UART_PutString(message);
+                    //sprintf(message, "The HEAD value is: %d\r\n", value);
+                    //UART_PutString(message);
                     flag_UART = 0;
                     status = RED;
                 }
                 else if (value == 'v'){
-                    sprintf(message, "RGB LED Program $$$\r\n");
+                    sprintf(message, "RGB LED Program $$$\n");
                     UART_PutString(message);
                     flag_UART = 0;
                     status = START;
@@ -78,9 +70,9 @@ int main(void)
                 
             case RED:
                 if (flag_UART == 1){
-                    red = value;
-                    sprintf(message, "The RED value is: %d\r\nWrite the GREEN value\r\n", red);
-                    UART_PutString(message);
+                    color.red = value;
+                    //sprintf(message, "The RED value is: %d\r\n", color.red);
+                    //UART_PutString(message);
                     flag_UART = 0;
                     status = GREEN;
                 }
@@ -88,9 +80,9 @@ int main(void)
             
             case GREEN:
                 if (flag_UART == 1){
-                    green = value;
-                    sprintf(message, "The GREEN value is: %d\r\nWrite the BLUE value\r\n", green);
-                    UART_PutString(message);
+                    color.green = value;
+                    //sprintf(message, "The GREEN value is: %d\r\n", color.green);
+                    //UART_PutString(message);
                     flag_UART = 0;
                     status = BLUE;
                 }
@@ -98,9 +90,9 @@ int main(void)
                 
             case BLUE:
                 if (flag_UART == 1){
-                    blu = value;
-                    sprintf(message, "The BLUE value is: %d\r\nWrite the TAIL value\r\n", blu);
-                    UART_PutString(message);
+                    color.blu = value;
+                    //sprintf(message, "The BLUE value is: %d\r\n", color.blu);
+                    //UART_PutString(message);
                     flag_UART = 0;
                     status = TAIL;
                 }
@@ -108,14 +100,17 @@ int main(void)
                 
             case TAIL:
                 if (flag_UART == 1 && value == TAIL_VALUE){
-                    sprintf(message, "The TAIL value is: %d\r\n", value);
-                    UART_PutString(message);
-                    Color COLOR = {red, green, blu};
-                    RGBLed_WriteColor(COLOR);
+                    //sprintf(message, "The TAIL value is: %d\r\n", value);
+                    //UART_PutString(message);        
+                    RGBLed_WriteColor(color);
                     flag_UART = 0;
                     status = START;
                 }
-                break;        
+                break;   
+            
+         
+                
+           
             } 
     }            
 }
