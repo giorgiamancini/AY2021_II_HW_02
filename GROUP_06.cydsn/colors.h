@@ -7,7 +7,7 @@ Colors definition
     
     #include "RGBLedDriver.h"
     
-    const Color BLACK = {0, 0, 0};
+    //const Color BLACK = {0, 0, 0};
     
     
 #endif
