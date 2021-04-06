@@ -11,6 +11,10 @@
 #include "InterruptRoutines.h"
 #include "RGBLedDriver.h"
 #include "colors.h"
+#include <unistd.h>
+#include "sys/time.h"
+
+
 
 #define IDLE 0
 #define HEAD 1
@@ -27,9 +31,36 @@ volatile uint8_t flag_UART = 0;
 volatile uint8_t value;
 uint8_t status = 0;
 Color color;
+int timeout=5;
 
 static char message [20] = {'\0'};
 
+int timeout_idle(int st){
+    
+    fd_set          input_set;
+    struct timeval  timeout;
+    int             user_input = 0;
+
+    /* Empty the FD Set */
+    FD_ZERO(&input_set );
+    /* Listen to the input descriptor */
+    FD_SET(0, &input_set);
+
+    
+    user_input = select(1, &input_set, NULL, NULL, &timeout);
+
+
+    if (user_input == -1) {
+        status=IDLE;
+    } 
+    else
+    {
+        status=st;
+    }
+ 
+        return st;
+    
+}
 int main(void)
 {
     
@@ -61,6 +92,7 @@ int main(void)
                     //UART_PutString(message);
                     flag_UART = 0;
                     status = RED;
+                    
                 }
                 else if (value == 'v'){
                     sprintf(message, "RGB LED Program $$$\n");
@@ -76,7 +108,7 @@ int main(void)
                     //sprintf(message, "The RED value is: %d\r\n", color.red);
                     //UART_PutString(message);
                     flag_UART = 0;
-                    status = GREEN;
+                    status =timeout_idle(GREEN);
                 }
                 break;
             
@@ -86,7 +118,7 @@ int main(void)
                     //sprintf(message, "The GREEN value is: %d\r\n", color.green);
                     //UART_PutString(message);
                     flag_UART = 0;
-                    status = BLUE;
+                    status =timeout_idle(BLUE);
                 }
                 break;
                 
@@ -96,7 +128,7 @@ int main(void)
                     //sprintf(message, "The BLUE value is: %d\r\n", color.blu);
                     //UART_PutString(message);
                     flag_UART = 0;
-                    status = TAIL;
+                    status =timeout_idle(TAIL);
                 }
                 break;
                 
