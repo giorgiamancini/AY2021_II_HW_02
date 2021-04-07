@@ -77,21 +77,6 @@ void state_change(int new_state, volatile uint8_t* flag_UART, volatile uint16_t*
 }
 
 
-/***************************************
-*          revert_to_idle
-***************************************/
-/*
-
-Reverts the system to IDLE state and notifies the user of the change.
-
-*/
-
-void revert_to_idle()
-{
-    sprintf(message, "State: IDLE\n");                  // Notify the user the system is back to IDLE state
-    UART_PutString(message);
-    state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
-}
 
 /***************************************
 *                main
@@ -124,7 +109,7 @@ int main(void)
             case HEAD:                
                 if (count == timeout*F_ISR && flag_UART == 0)       // check if the timeout is reached and no new byte is available
                 {
-                    revert_to_idle();
+                    state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
                 }
                 
                 else if (value == TIMER_VALUE)      // check if the received value corresponds to the header for the timeout configuration packet
@@ -176,14 +161,12 @@ int main(void)
                 
                 if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
                 {
-                    revert_to_idle();                                   // Revert to IDLE state
+                    state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
                 }
                 
                 else if (flag_UART == 1)                                        // Check if a new byte is received before timeout is reached
                 {
                     color.red = value;                                          // Store the received byte as the RED value
-                    sprintf(message, "The RED value is: %d\r\n", color.red);    // Display the received byte
-                    UART_PutString(message);
                     state_change(GREEN, &flag_UART, &count, &status);         // Switch to GREEN state
                 }
                 break;
@@ -192,14 +175,12 @@ int main(void)
                 
                 if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
                 {
-                    revert_to_idle();                                   // Revert to IDLE state
+                    state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
                 }
                 
                 else if (flag_UART == 1)
                 {
                     color.green = value;                                            // Store the received byte as the GREEN value
-                    sprintf(message, "The GREEN value is: %d\r\n", color.green);    // Display the received byte
-                    UART_PutString(message);
                     state_change(BLUE, &flag_UART, &count, &status);              // Switch to BLUE state
                 }
                 break;
@@ -208,14 +189,12 @@ int main(void)
                 
                 if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
                 {
-                    revert_to_idle();                                   // Revert to IDLE state
+                    state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
                 }
                 
                 else if (flag_UART == 1)
                 {
                     color.blu = value;                                          // Store the received byte as the BLUE value
-                    sprintf(message, "The BLUE value is: %d\r\n", color.blu);   // Display the received byte
-                    UART_PutString(message);
                     state_change(TAIL, &flag_UART, &count, &status);            // Switch to TAIL state
                 }
                 break;
@@ -224,12 +203,11 @@ int main(void)
                 
                 if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
                 {
-                    revert_to_idle();                                   // Revert to IDLE state
+                    state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
                 }
                 
                 else if (flag_UART == 1 && value == TAIL_VALUE){
-                    sprintf(message, "The TAIL value is: %d\r\n", value);       // Display the received byte
-                    UART_PutString(message);        
+                         
                     RGBLed_WriteColor(color);                                   // Change the LED color
                     state_change(IDLE, &flag_UART, &count, &status);          // Switch to IDLE state
                 }
