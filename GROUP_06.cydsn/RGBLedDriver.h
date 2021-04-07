@@ -1,7 +1,11 @@
 /* ========================================
- *
- * Header file for the RGB Led interface
- * /Group 06
+Electronic Technologies and Biosensors Laboratory
+Academic Year 2020/2021 - II Semester
+Assignment 02
+GROUP_06 
+
+Header file for the RGB Led interface
+
 */
 
 
@@ -11,22 +15,20 @@
     
     #include "project.h"
    
-    //I want black as first color so I define Struct holding color data to create the three channels
+    // Define a struct containing RGB color data
     
     typedef struct {
-        uint8_t red; //red value 0-255
-        uint8_t green; //green value 0-255
-        uint8_t blu; //blu value 0-255
+        uint8_t red;     // red value 0-255
+        uint8_t green;   // green value 0-255
+        uint8_t blu;     // blu value 0-255
     } Color;
     
-    
-    
-    // per iniziare e stoppare il driver
+    // Starting and stopping the driver
     void RGBLed_Start(void);
     
     void RGBLed_Stop(void);
     
-    //to change color manually on the led 
+    // Manually chosing the LED color
     void RGBLed_WriteColor(Color c);
     
     
