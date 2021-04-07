@@ -18,7 +18,7 @@ Include the necessary headers and libraries
 #include "stdio.h"
 #include "InterruptRoutines.h"
 #include "RGBLedDriver.h"
-//#include "colors.h"
+
 
 /*
 Define the system states
@@ -62,16 +62,13 @@ arguments:
 -   flag_UART: indicate wether there is a new readable byte available
 -   count: timer
 -   status: state of the system
--   count_reset: if the value 1 is passed, the counter is reset to 0.
 
 */
 
 void state_change(int new_state, volatile uint8_t* flag_UART, volatile uint16_t* count, volatile uint8_t* status)
 {
    
-        *count=0;           // Restart the timer
-    
-   
+    *count=0;               // Restart the timer
     *flag_UART=0;           // Indicate that there are no new readable bytes
     *status=new_state;      // Assign the new state
 }
@@ -109,15 +106,15 @@ int main(void)
             case HEAD:                
                 if (count == timeout*F_ISR && flag_UART == 0)       // check if the timeout is reached and no new byte is available
                 {
-                    state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
+                    state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state                    
                 }
                 
-                else if (value == TIMER_VALUE)      // check if the received value corresponds to the header for the timeout configuration packet
+                else if (value == TIMER_VALUE)      // check if the received value is the header for the timeout configuration packet
                 {
                     state_change(SET_TIMEOUT, &flag_UART, &count, &status);       // Switch to timeout configuration state
                 }
                     
-                else if (value == HEAD_VALUE)       // check if the received value corresponds to the header for the RGB color packet
+                else if (value == HEAD_VALUE)       // check if the received value is the header for the RGB color packet
                 {
                     state_change(RED, &flag_UART, &count, &status);   // Switch to RED state
                 }
@@ -161,7 +158,7 @@ int main(void)
                 
                 if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
                 {
-                    state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
+                    state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state                   
                 }
                 
                 else if (flag_UART == 1)                                        // Check if a new byte is received before timeout is reached
