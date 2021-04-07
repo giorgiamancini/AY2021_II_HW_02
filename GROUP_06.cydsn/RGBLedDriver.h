@@ -29,7 +29,7 @@ Header file for the RGB Led interface
     void RGBLed_Stop(void);
     
     // Manually chosing the LED color
-    void RGBLed_WriteColor(Color c);
+    void RGBLed_WriteColor(Color color);
     
     
 #endif

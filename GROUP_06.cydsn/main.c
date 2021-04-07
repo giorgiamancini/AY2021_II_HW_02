@@ -18,7 +18,7 @@ Include the necessary headers and libraries
 #include "stdio.h"
 #include "InterruptRoutines.h"
 #include "RGBLedDriver.h"
-#include "colors.h"
+//#include "colors.h"
 
 /*
 Define the system states
@@ -66,12 +66,11 @@ arguments:
 
 */
 
-void state_change(int new_state, volatile uint8_t* flag_UART, volatile uint16_t* count, volatile uint8_t* status, int count_reset)
+void state_change(int new_state, volatile uint8_t* flag_UART, volatile uint16_t* count, volatile uint8_t* status)
 {
-    if (count_reset==1)
-    {
+   
         *count=0;           // Restart the timer
-    }
+    
    
     *flag_UART=0;           // Indicate that there are no new readable bytes
     *status=new_state;      // Assign the new state
@@ -91,7 +90,7 @@ void revert_to_idle()
 {
     sprintf(message, "State: IDLE\n");                  // Notify the user the system is back to IDLE state
     UART_PutString(message);
-    state_change(IDLE, &flag_UART, &count, &status,1);  // Revert to IDLE state
+    state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
 }
 
 /***************************************
@@ -118,7 +117,7 @@ int main(void)
             case IDLE:
                 if (flag_UART == 1)     // check if a new byte is present
                 {
-                    state_change(HEAD, &flag_UART, &count, &status,1);      // Switch to HEAD state
+                    state_change(HEAD, &flag_UART, &count, &status);      // Switch to HEAD state
                 }
                 break;
             
@@ -130,18 +129,18 @@ int main(void)
                 
                 else if (value == TIMER_VALUE)      // check if the received value corresponds to the header for the timeout configuration packet
                 {
-                    state_change(SET_TIMEOUT, &flag_UART, &count, &status,1);       // Switch to timeout configuration state
+                    state_change(SET_TIMEOUT, &flag_UART, &count, &status);       // Switch to timeout configuration state
                 }
                     
                 else if (value == HEAD_VALUE)       // check if the received value corresponds to the header for the RGB color packet
                 {
-                    state_change(RED, &flag_UART, &count, &status,1);   // Switch to RED state
+                    state_change(RED, &flag_UART, &count, &status);   // Switch to RED state
                 }
                 
                 else if (value == 'v'){             // check if the new value is the connection command 'v'
                     sprintf(message, "RGB LED Program $$$\n");
                     UART_PutString(message);
-                    state_change(IDLE, &flag_UART, &count, &status,1);  // Go back to IDLE state
+                    state_change(IDLE, &flag_UART, &count, &status);  // Go back to IDLE state
                 }
                 
                 break;
@@ -151,17 +150,17 @@ int main(void)
                 if (flag_UART == 1 && value>0 && value<=20)             // Check if the received timeout value is between 0 and 20 seconds
                 {
                     timeout = value;                                                // Set the new timeout
-                    state_change(END_SET_TIMEOUT, &flag_UART, &count, &status,1);   // Exit the timeout configuration
+                    state_change(END_SET_TIMEOUT, &flag_UART, &count, &status);   // Exit the timeout configuration
                 }
                 else if (flag_UART==1 && value <=0)                      // If the timeout value is negative or null, default to timeout = 5 seconds
                 {
                     timeout = 5;
-                    state_change(END_SET_TIMEOUT, &flag_UART, &count, &status,1);
+                    state_change(END_SET_TIMEOUT, &flag_UART, &count, &status);
                 }
                 else if (flag_UART==1 && value >20)                     // If the timeout value is greater than 20 seconds, default to timeout = 20 seconds
                 {
                     timeout = 20;
-                    state_change(END_SET_TIMEOUT, &flag_UART, &count, &status,1);
+                    state_change(END_SET_TIMEOUT, &flag_UART, &count, &status);
                 }
                 break;
                 
@@ -169,7 +168,7 @@ int main(void)
 
                 if (flag_UART == 1 && value == TAIL_VALUE)              // Check if a new byte is available and it corresponds to the tail of the timer configuration packet
                 {
-                    state_change(IDLE, &flag_UART, &count, &status,1);  // Go back to IDLE state
+                    state_change(IDLE, &flag_UART, &count, &status);  // Go back to IDLE state
                 }
                 break;
                 
@@ -185,7 +184,7 @@ int main(void)
                     color.red = value;                                          // Store the received byte as the RED value
                     sprintf(message, "The RED value is: %d\r\n", color.red);    // Display the received byte
                     UART_PutString(message);
-                    state_change(GREEN, &flag_UART, &count, &status,1);         // Switch to GREEN state
+                    state_change(GREEN, &flag_UART, &count, &status);         // Switch to GREEN state
                 }
                 break;
             
@@ -201,7 +200,7 @@ int main(void)
                     color.green = value;                                            // Store the received byte as the GREEN value
                     sprintf(message, "The GREEN value is: %d\r\n", color.green);    // Display the received byte
                     UART_PutString(message);
-                    state_change(BLUE, &flag_UART, &count, &status,1);              // Switch to BLUE state
+                    state_change(BLUE, &flag_UART, &count, &status);              // Switch to BLUE state
                 }
                 break;
                 
@@ -217,7 +216,7 @@ int main(void)
                     color.blu = value;                                          // Store the received byte as the BLUE value
                     sprintf(message, "The BLUE value is: %d\r\n", color.blu);   // Display the received byte
                     UART_PutString(message);
-                    state_change(TAIL, &flag_UART, &count, &status,1);          // Switch to TAIL state
+                    state_change(TAIL, &flag_UART, &count, &status);            // Switch to TAIL state
                 }
                 break;
                 
@@ -232,7 +231,7 @@ int main(void)
                     sprintf(message, "The TAIL value is: %d\r\n", value);       // Display the received byte
                     UART_PutString(message);        
                     RGBLed_WriteColor(color);                                   // Change the LED color
-                    state_change(IDLE, &flag_UART, &count, &status,1);          // Switch to IDLE state
+                    state_change(IDLE, &flag_UART, &count, &status);          // Switch to IDLE state
                 }
                 break;   
             
