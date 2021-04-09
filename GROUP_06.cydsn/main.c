@@ -103,13 +103,15 @@ int main(void)
                 }
                 break;
             
-            case HEAD:                
-                if (count == timeout*F_ISR && flag_UART == 0)       // check if the timeout is reached and no new byte is available
+            case HEAD: 
+                
+                if (count == timeout*F_ISR)     // check if the timeout is reached and no new byte is available or if the character is not correct
                 {
-                    //sprintf(message, "Come back to idle\r\n");
-                    //UART_PutString(message);
+                    sprintf(message, "idle\r\n");
+                    UART_PutString(message);
                     state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state                    
                 }
+                
                 
                 else if (value == TIMER_VALUE)      // check if the received value is the header for the timeout configuration packet
                 {
@@ -160,8 +162,8 @@ int main(void)
                 
                 if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
                 {
-                    //sprintf(message, "Come back to idle\r\n");
-                    //UART_PutString(message);
+                    sprintf(message, "Come back to idle\r\n");
+                    UART_PutString(message);
                     state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state                   
                 }
                 
@@ -176,8 +178,8 @@ int main(void)
                 
                 if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
                 {
-                    //sprintf(message, "Come back to idle\r\n");
-                    //UART_PutString(message);
+                    sprintf(message, "Come back to idle\r\n");
+                    UART_PutString(message);
                     state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
                 }
                 
@@ -192,8 +194,8 @@ int main(void)
                 
                 if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
                 {
-                    //sprintf(message, "Come back to idle\r\n");
-                    //UART_PutString(message);
+                    sprintf(message, "Come back to idle\r\n");
+                    UART_PutString(message);
                     state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
                 }
                 
@@ -206,10 +208,10 @@ int main(void)
                 
             case TAIL:
                 
-                if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
+                if (count == timeout*F_ISR)      //Check if timeout is reached before a new byte is received or if the character is not correct 
                 {
-                    //sprintf(message, "Come back to idle\r\n");
-                    //UART_PutString(message);
+                    sprintf(message, "Come back to idle\r\n");
+                    UART_PutString(message);
                     state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
                 }
                 
@@ -218,6 +220,7 @@ int main(void)
                     RGBLed_WriteColor(color);                                   // Change the LED color
                     state_change(IDLE, &flag_UART, &count, &status);          // Switch to IDLE state
                 }
+                
                 break;   
             
         } 
