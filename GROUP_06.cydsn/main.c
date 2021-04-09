@@ -23,21 +23,21 @@ Include the necessary headers and libraries
 /*
 Define the system states
 */
-#define IDLE 0
-#define HEAD 1
-#define SET_TIMEOUT 2
-#define END_SET_TIMEOUT 3
-#define RED 4
-#define GREEN 5
-#define BLUE 6
-#define TAIL 7
+#define IDLE 0                  // idle state
+#define HEAD 1                  // waiting for RGB color packed header
+#define SET_TIMEOUT 2           // received timer configuration packet header
+#define END_SET_TIMEOUT 3       // received timer configuration packet tail
+#define RED 4                   // received RGB color packed header, waiting for RED HEX value
+#define GREEN 5                 // received RED HEX value, waiting for GREEN HEX value
+#define BLUE 6                  // received GREEN HEX value, waiting for BLUE HEX value
+#define TAIL 7                  // received BLUE HEX value, waiting for RGB color packed tail
 
 /*
 Define the decimal values for the packet headers and tails
 */
 #define HEAD_VALUE 160      // RGB Color Packet header
-#define TAIL_VALUE 192      // RGB Color Packet tail
-#define TIMER_VALUE 161     // Timeout configuration header
+#define TAIL_VALUE 192      // RGB Color Packet / Timer Configuration Packet tail
+#define TIMER_VALUE 161     // Timer Configuration header
 
 #define F_ISR 1000          // Frequency of the timer
             
@@ -50,6 +50,7 @@ uint8_t timeout = 5;                // Seconds of timeout timer
 Color color;                        // Struct storing RGB LED values
 
 static char message [20] = {'\0'};
+
 
 /***************************************
 *         state_change
@@ -74,7 +75,6 @@ void state_change(int new_state, volatile uint8_t* flag_UART, volatile uint16_t*
 }
 
 
-
 /***************************************
 *                main
 ***************************************/
@@ -88,6 +88,7 @@ int main(void)
     ISR_UART_StartEx(Custom_UART_RX_ISR);
     ISR_TIMER_StartEx(Custom_TIMER_SET_ISR);
     
+    // Set the initial LED color to BLACK
     RGBLed_WriteColor(BLACK);
     
     CyGlobalIntEnable; /* Enable global interrupts. */
