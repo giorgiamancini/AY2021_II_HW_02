@@ -108,8 +108,8 @@ int main(void)
                 
                 if (count == timeout*F_ISR)     // check if the timeout is reached and no new byte is available or if the character is not correct
                 {
-                    sprintf(message, "idle\r\n");
-                    UART_PutString(message);
+                    //sprintf(message, "Come back to idle\r\n");
+                    //UART_PutString(message);
                     state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state                    
                 }
                 
@@ -163,8 +163,8 @@ int main(void)
                 
                 if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
                 {
-                    sprintf(message, "Come back to idle\r\n");
-                    UART_PutString(message);
+                    //sprintf(message, "Come back to idle\r\n");
+                    //UART_PutString(message);
                     state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state                   
                 }
                 
@@ -179,8 +179,8 @@ int main(void)
                 
                 if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
                 {
-                    sprintf(message, "Come back to idle\r\n");
-                    UART_PutString(message);
+                    //sprintf(message, "Come back to idle\r\n");
+                    //UART_PutString(message);
                     state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
                 }
                 
@@ -195,8 +195,8 @@ int main(void)
                 
                 if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
                 {
-                    sprintf(message, "Come back to idle\r\n");
-                    UART_PutString(message);
+                    //sprintf(message, "Come back to idle\r\n");
+                    //UART_PutString(message);
                     state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
                 }
                 
@@ -211,8 +211,8 @@ int main(void)
                 
                 if (count == timeout*F_ISR)      //Check if timeout is reached before a new byte is received or if the character is not correct 
                 {
-                    sprintf(message, "Come back to idle\r\n");
-                    UART_PutString(message);
+                    //sprintf(message, "Come back to idle\r\n");
+                    //UART_PutString(message);
                     state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
                 }
                 
