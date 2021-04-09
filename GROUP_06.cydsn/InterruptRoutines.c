@@ -1,5 +1,5 @@
 /* ========================================
- 
+ *
 Electronic Technologies and Biosensors Laboratory
 Academic Year 2020/2021 - II Semester
 Assignment 02
@@ -10,6 +10,7 @@ ISR source file
 -   Custom_UART_RX_ISR: the UART triggers an interrupt as soon as a single byte is received
 -   Custom_TIMER_SET_ISR: timeout for user input during inbetween states
 
+ *
  * ========================================
 */
 
