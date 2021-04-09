@@ -1,4 +1,5 @@
 /* ========================================
+ *
 Electronic Technologies and Biosensors Laboratory
 Academic Year 2020/2021 - II Semester
 Assignment 02
@@ -6,6 +7,7 @@ GROUP_06
 
 Source file for the LED driver
 
+ *
 */
 
 
