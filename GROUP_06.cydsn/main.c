@@ -58,7 +58,7 @@ static char message [20] = {'\0'};
 /*
 
 This function brings the system from one state to another. 
-arguments:
+Arguments:
 -   new_state: state to bring the system to (IDLE, HEAD, SET_TIMEOUT, END_SET_TIMEOUT, RED, GREEN, BLUE, TAIL)
 -   flag_UART: indicate wether there is a new readable byte available
 -   count: timer
@@ -136,12 +136,12 @@ int main(void)
 
                 if (flag_UART == 1 && value>0 && value<=20)             // Check if the received timeout value is between 0 and 20 seconds
                 {
-                    timeout = value;                                                // Set the new timeout
+                    timeout = value;                                              // Set the new timeout
                     state_change(END_SET_TIMEOUT, &flag_UART, &count, &status);   // Exit the timeout configuration
                 }
-                else if (flag_UART==1 && value <=0)                      // If the timeout value is negative or null, default to timeout = 5 seconds
+                else if (flag_UART==1 && value <=0)                      // If the timeout value is negative or null, default to timeout = 1 second
                 {
-                    timeout = 5;
+                    timeout = 1;
                     state_change(END_SET_TIMEOUT, &flag_UART, &count, &status);
                 }
                 else if (flag_UART==1 && value >20)                     // If the timeout value is greater than 20 seconds, default to timeout = 20 seconds
@@ -153,7 +153,7 @@ int main(void)
                 
             case END_SET_TIMEOUT:
 
-                if (flag_UART == 1 && value == TAIL_VALUE)              // Check if a new byte is available and it corresponds to the tail of the timer configuration packet
+                if (flag_UART == 1 && value == TAIL_VALUE)            // Check if a new byte is available and it corresponds to the tail of the timer configuration packet
                 {
                     state_change(IDLE, &flag_UART, &count, &status);  // Go back to IDLE state
                 }
@@ -161,7 +161,7 @@ int main(void)
                 
             case RED:
                 
-                if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
+                if (count == timeout*F_ISR && flag_UART == 0)         // Check if timeout is reached before a new byte is received
                 {
                     //sprintf(message, "Come back to idle\r\n");
                     //UART_PutString(message);
@@ -171,7 +171,7 @@ int main(void)
                 else if (flag_UART == 1)                                        // Check if a new byte is received before timeout is reached
                 {
                     color.red = value;                                          // Store the received byte as the RED value
-                    state_change(GREEN, &flag_UART, &count, &status);         // Switch to GREEN state
+                    state_change(GREEN, &flag_UART, &count, &status);           // Switch to GREEN state
                 }
                 break;
             
@@ -181,19 +181,19 @@ int main(void)
                 {
                     //sprintf(message, "Come back to idle\r\n");
                     //UART_PutString(message);
-                    state_change(IDLE, &flag_UART, &count, &status);  // Revert to IDLE state
+                    state_change(IDLE, &flag_UART, &count, &status);    // Revert to IDLE state
                 }
                 
                 else if (flag_UART == 1)
                 {
-                    color.green = value;                                            // Store the received byte as the GREEN value
+                    color.green = value;                                          // Store the received byte as the GREEN value
                     state_change(BLUE, &flag_UART, &count, &status);              // Switch to BLUE state
                 }
                 break;
                 
             case BLUE:
                 
-                if (count == timeout*F_ISR && flag_UART == 0)           // Check if timeout is reached before a new byte is received
+                if (count == timeout*F_ISR && flag_UART == 0)         // Check if timeout is reached before a new byte is received
                 {
                     //sprintf(message, "Come back to idle\r\n");
                     //UART_PutString(message);
@@ -218,7 +218,7 @@ int main(void)
                 
                 else if (flag_UART == 1 && value == TAIL_VALUE){
                          
-                    RGBLed_WriteColor(color);                                   // Change the LED color
+                    RGBLed_WriteColor(color);                                 // Change the LED color
                     state_change(IDLE, &flag_UART, &count, &status);          // Switch to IDLE state
                 }
                 
@@ -228,8 +228,5 @@ int main(void)
      }            
 }
             
-    
-           
-
 
 /* [] END OF FILE */

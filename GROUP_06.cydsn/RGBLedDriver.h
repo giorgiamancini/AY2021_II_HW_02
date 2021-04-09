@@ -24,11 +24,13 @@ Header file for the RGB Led interface
     } Color;
     
     // Starting and stopping the driver
+    
     void RGBLed_Start(void);
     
     void RGBLed_Stop(void);
     
     // Manually chosing the LED color
+    
     void RGBLed_WriteColor(Color color);
     
     
